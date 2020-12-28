@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright © 2013 Andrew Chisholm&lt;br&gt;&lt;center&gt;All rights reserved&lt;br&gt;&lt;center&gt;andrew.chisholm@information-gain.com&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+This process reads and writes to a folder at the following location
+&lt;br&gt;
+C:\exploringDataWithRapidMiner
+&lt;br&gt;
+Change this for your own needs as required
+</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="5.3.013" expanded="true" height="60" name="Read CSV" width="90" x="45" y="120">
+        <parameter key="csv_file" value="C:\exploringDataWithRapidMiner\fruitandveg.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="false"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="date_format" value=""/>
+        <parameter key="first_row_as_names" value="false"/>
+        <list key="annotations">
+          <parameter key="0" value="Name"/>
+        </list>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="encoding" value="windows-1252"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="id.true.integer.attribute"/>
+          <parameter key="1" value="apple.true.integer.attribute"/>
+          <parameter key="2" value="banana.true.integer.attribute"/>
+          <parameter key="3" value="carrot.true.integer.attribute"/>
+          <parameter key="4" value="daikon.true.integer.attribute"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="true"/>
+        <parameter key="datamanagement" value="double_array"/>
+      </operator>
+      <operator activated="true" class="generate_aggregation" compatibility="5.3.013" expanded="true" height="76" name="sum fruit" width="90" x="179" y="30">
+        <parameter key="attribute_name" value="fruit"/>
+        <parameter key="attribute_filter_type" value="regular_expression"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="regular_expression" value="apple|banana"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="aggregation_function" value="sum"/>
+        <parameter key="keep_all" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="generate_aggregation" compatibility="5.3.013" expanded="true" height="76" name="sum vegetable" width="90" x="179" y="120">
+        <parameter key="attribute_name" value="vegetable"/>
+        <parameter key="attribute_filter_type" value="regular_expression"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="regular_expression" value="carrot|daikon"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="aggregation_function" value="sum"/>
+        <parameter key="keep_all" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="extract_macro" compatibility="5.3.013" expanded="true" height="60" name="mean fruit" width="90" x="313" y="30">
+        <parameter key="macro" value="averageFruit"/>
+        <parameter key="macro_type" value="statistics"/>
+        <parameter key="statistics" value="average"/>
+        <parameter key="attribute_name" value="fruit"/>
+        <list key="additional_macros"/>
+      </operator>
+      <operator activated="true" class="extract_macro" compatibility="5.3.013" expanded="true" height="60" name="sd fruit" width="90" x="313" y="120">
+        <parameter key="macro" value="standardDeviationFruit"/>
+        <parameter key="macro_type" value="statistics"/>
+        <parameter key="statistics" value="deviation"/>
+        <parameter key="attribute_name" value="fruit"/>
+        <list key="additional_macros"/>
+      </operator>
+      <operator activated="true" class="extract_macro" compatibility="5.3.013" expanded="true" height="60" name="mean vegetable" width="90" x="447" y="30">
+        <parameter key="macro" value="averageVegetable"/>
+        <parameter key="macro_type" value="statistics"/>
+        <parameter key="statistics" value="average"/>
+        <parameter key="attribute_name" value="vegetable"/>
+        <list key="additional_macros"/>
+      </operator>
+      <operator activated="true" class="extract_macro" compatibility="5.3.013" expanded="true" height="60" name="sd vegetable" width="90" x="447" y="120">
+        <parameter key="macro" value="standardDeviationVegetable"/>
+        <parameter key="macro_type" value="statistics"/>
+        <parameter key="statistics" value="deviation"/>
+        <parameter key="attribute_name" value="vegetable"/>
+        <list key="additional_macros"/>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="5.3.013" expanded="true" height="76" name="z scores" width="90" x="581" y="120">
+        <list key="function_descriptions">
+          <parameter key="zFruit" value="(fruit-%{averageFruit})/%{standardDeviationFruit}"/>
+          <parameter key="zVegetable" value="(vegetable-%{averageVegetable})/%{standardDeviationVegetable}"/>
+        </list>
+        <parameter key="use_standard_constants" value="true"/>
+        <parameter key="keep_all" value="true"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="5.3.013" expanded="true" height="76" name="Aggregate" width="90" x="581" y="210">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="fruit" value="sum"/>
+          <parameter key="vegetable" value="sum"/>
+        </list>
+        <parameter key="group_by_attributes" value="id"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="5.3.013" expanded="true" height="76" name="Set Role" width="90" x="581" y="300">
+        <parameter key="attribute_name" value="id"/>
+        <parameter key="target_role" value="id"/>
+        <list key="set_additional_roles"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="sum fruit" to_port="example set input"/>
+      <connect from_op="sum fruit" from_port="example set output" to_op="sum vegetable" to_port="example set input"/>
+      <connect from_op="sum fruit" from_port="original" to_port="result 2"/>
+      <connect from_op="sum vegetable" from_port="example set output" to_op="mean fruit" to_port="example set"/>
+      <connect from_op="sum vegetable" from_port="original" to_port="result 5"/>
+      <connect from_op="mean fruit" from_port="example set" to_op="sd fruit" to_port="example set"/>
+      <connect from_op="sd fruit" from_port="example set" to_op="mean vegetable" to_port="example set"/>
+      <connect from_op="mean vegetable" from_port="example set" to_op="sd vegetable" to_port="example set"/>
+      <connect from_op="sd vegetable" from_port="example set" to_op="z scores" to_port="example set input"/>
+      <connect from_op="z scores" from_port="example set output" to_op="Aggregate" to_port="example set input"/>
+      <connect from_op="z scores" from_port="original" to_port="result 4"/>
+      <connect from_op="Aggregate" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Aggregate" from_port="original" to_port="result 3"/>
+      <connect from_op="Set Role" from_port="example set output" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+      <portSpacing port="sink_result 5" spacing="0"/>
+      <portSpacing port="sink_result 6" spacing="0"/>
+    </process>
+  </operator>
+</process>

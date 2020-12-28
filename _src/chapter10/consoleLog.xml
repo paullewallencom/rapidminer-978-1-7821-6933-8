@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright © 2013 Andrew Chisholm&lt;br&gt;&lt;center&gt;All rights reserved&lt;br&gt;&lt;center&gt;andrew.chisholm@information-gain.com&lt;br&gt;
+
+&lt;br&gt;
+&lt;br&gt;
+</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="set_macro" compatibility="5.3.013" expanded="true" height="76" name="Set Macro" width="90" x="45" y="30">
+        <parameter key="macro" value="Hello"/>
+        <parameter key="value" value="Hello world in a macro"/>
+      </operator>
+      <operator activated="true" class="print_to_console" compatibility="5.3.013" expanded="true" height="76" name="Print to Console (2)" width="90" x="179" y="30">
+        <parameter key="log_value" value="%{Hello}"/>
+      </operator>
+      <operator activated="true" class="print_to_console" compatibility="5.3.013" expanded="true" height="76" name="Print to Console (3)" width="90" x="313" y="30">
+        <parameter key="log_value" value="Hello world directly"/>
+      </operator>
+      <connect from_op="Set Macro" from_port="through 1" to_op="Print to Console (2)" to_port="through 1"/>
+      <connect from_op="Print to Console (2)" from_port="through 1" to_op="Print to Console (3)" to_port="through 1"/>
+      <connect from_op="Print to Console (3)" from_port="through 1" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>

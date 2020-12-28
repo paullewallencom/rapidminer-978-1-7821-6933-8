@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="text:process_document_from_file" compatibility="5.3.001" expanded="true" height="76" name="Process Documents from Files" width="90" x="112" y="30">
+        <list key="text_directories">
+          <parameter key="Baum" value="C:\aaTestData\Novels\Baum"/>
+          <parameter key="ConanDoyle" value="C:\aaTestData\Novels\ConanDoyle"/>
+          <parameter key="ENesbit" value="C:\aaTestData\Novels\ENesbit"/>
+        </list>
+        <parameter key="file_pattern" value="*"/>
+        <parameter key="extract_text_only" value="true"/>
+        <parameter key="use_file_extension_as_type" value="true"/>
+        <parameter key="content_type" value="txt"/>
+        <parameter key="encoding" value="SYSTEM"/>
+        <parameter key="create_word_vector" value="true"/>
+        <parameter key="vector_creation" value="Term Occurrences"/>
+        <parameter key="add_meta_information" value="false"/>
+        <parameter key="keep_text" value="false"/>
+        <parameter key="prune_method" value="none"/>
+        <parameter key="prune_below_percent" value="3.0"/>
+        <parameter key="prune_above_percent" value="30.0"/>
+        <parameter key="prune_below_rank" value="0.05"/>
+        <parameter key="prune_above_rank" value="0.95"/>
+        <parameter key="datamanagement" value="double_sparse_array"/>
+        <parameter key="parallelize_vector_creation" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="text:tokenize" compatibility="5.3.001" expanded="true" height="60" name="Tokenize" width="90" x="112" y="75">
+            <parameter key="mode" value="non letters"/>
+            <parameter key="characters" value=".:"/>
+            <parameter key="language" value="English"/>
+            <parameter key="max_token_length" value="3"/>
+          </operator>
+          <operator activated="true" class="text:transform_cases" compatibility="5.3.001" expanded="true" height="60" name="Transform Cases" width="90" x="246" y="75">
+            <parameter key="transform_to" value="lower case"/>
+          </operator>
+          <operator activated="true" class="text:filter_stopwords_english" compatibility="5.3.001" expanded="true" height="60" name="Filter Stopwords (English)" width="90" x="380" y="75"/>
+          <connect from_port="document" to_op="Tokenize" to_port="document"/>
+          <connect from_op="Tokenize" from_port="document" to_op="Transform Cases" to_port="document"/>
+          <connect from_op="Transform Cases" from_port="document" to_op="Filter Stopwords (English)" to_port="document"/>
+          <connect from_op="Filter Stopwords (English)" from_port="document" to_port="document 1"/>
+          <portSpacing port="source_document" spacing="0"/>
+          <portSpacing port="sink_document 1" spacing="0"/>
+          <portSpacing port="sink_document 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="loop_attributes" compatibility="5.3.013" expanded="true" height="76" name="Loop Attributes" width="90" x="112" y="255">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="iteration_macro" value="loop_attribute"/>
+        <parameter key="parallelize_subprocess" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="extract_macro" compatibility="5.3.013" expanded="true" height="60" name="Extract Macro" width="90" x="112" y="75">
+            <parameter key="macro" value="sd"/>
+            <parameter key="macro_type" value="statistics"/>
+            <parameter key="statistics" value="deviation"/>
+            <parameter key="attribute_name" value="%{loop_attribute}"/>
+            <list key="additional_macros"/>
+          </operator>
+          <operator activated="true" class="provide_macro_as_log_value" compatibility="5.3.013" expanded="true" height="76" name="loop" width="90" x="246" y="75">
+            <parameter key="macro_name" value="loop_attribute"/>
+          </operator>
+          <operator activated="true" class="provide_macro_as_log_value" compatibility="5.3.013" expanded="true" height="76" name="sd" width="90" x="380" y="75">
+            <parameter key="macro_name" value="sd"/>
+          </operator>
+          <operator activated="true" class="log" compatibility="5.3.013" expanded="true" height="76" name="Log" width="90" x="514" y="75">
+            <list key="log">
+              <parameter key="loopAttribute" value="operator.loop.value.macro_value"/>
+              <parameter key="sd" value="operator.sd.value.macro_value"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="sorting_k" value="100"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="example set" to_op="Extract Macro" to_port="example set"/>
+          <connect from_op="Extract Macro" from_port="example set" to_op="loop" to_port="through 1"/>
+          <connect from_op="loop" from_port="through 1" to_op="sd" to_port="through 1"/>
+          <connect from_op="sd" from_port="through 1" to_op="Log" to_port="through 1"/>
+          <connect from_op="Log" from_port="through 1" to_port="example set"/>
+          <portSpacing port="source_example set" spacing="0"/>
+          <portSpacing port="sink_example set" spacing="0"/>
+          <portSpacing port="sink_result 1" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="5.3.013" expanded="true" height="94" name="Log to Data" width="90" x="246" y="30"/>
+      <operator activated="true" class="guess_types" compatibility="5.3.013" expanded="true" height="76" name="Guess Types" width="90" x="246" y="165">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="decimal_point_character" value="."/>
+      </operator>
+      <operator activated="true" class="sort" compatibility="5.3.013" expanded="true" height="76" name="Sort" width="90" x="246" y="255">
+        <parameter key="attribute_name" value="sd"/>
+        <parameter key="sorting_direction" value="increasing"/>
+      </operator>
+      <operator activated="true" class="discretize_by_size" compatibility="5.3.013" expanded="true" height="94" name="Discretize" width="90" x="380" y="165">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="create_view" value="false"/>
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="sd"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="size_of_bins" value="200"/>
+        <parameter key="sorting_direction" value="decreasing"/>
+        <parameter key="range_name_type" value="long"/>
+        <parameter key="automatic_number_of_digits" value="true"/>
+        <parameter key="number_of_digits" value="-1"/>
+      </operator>
+      <operator activated="true" class="replace" compatibility="5.3.013" expanded="true" height="76" name="Replace" width="90" x="514" y="165">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="sd"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="regular_expression" value="sd"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="nominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="replace_what" value="range(\d+.*)"/>
+        <parameter key="replace_by" value="range0000$1"/>
+      </operator>
+      <operator activated="true" class="replace" compatibility="5.3.013" expanded="true" height="76" name="Replace (2)" width="90" x="514" y="255">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="sd"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="regular_expression" value="sd"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="nominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="replace_what" value="range0+(\d{4})(.*)"/>
+        <parameter key="replace_by" value="range$1$2"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="5.3.013" expanded="true" height="76" name="Aggregate" width="90" x="514" y="390">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="loopAttribute" value="count"/>
+        </list>
+        <parameter key="group_by_attributes" value="|sd"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="remove_useless_attributes" compatibility="5.3.013" expanded="true" height="76" name="Remove Useless Attributes" width="90" x="380" y="30">
+        <parameter key="numerical_min_deviation" value="0.5"/>
+        <parameter key="nominal_useless_above" value="1.0"/>
+        <parameter key="nominal_remove_id_like" value="false"/>
+        <parameter key="nominal_useless_below" value="0.0"/>
+      </operator>
+      <connect from_op="Process Documents from Files" from_port="example set" to_op="Loop Attributes" to_port="example set"/>
+      <connect from_op="Loop Attributes" from_port="example set" to_op="Log to Data" to_port="through 1"/>
+      <connect from_op="Log to Data" from_port="exampleSet" to_op="Guess Types" to_port="example set input"/>
+      <connect from_op="Log to Data" from_port="through 1" to_op="Remove Useless Attributes" to_port="example set input"/>
+      <connect from_op="Guess Types" from_port="example set output" to_op="Sort" to_port="example set input"/>
+      <connect from_op="Sort" from_port="example set output" to_op="Discretize" to_port="example set input"/>
+      <connect from_op="Discretize" from_port="example set output" to_op="Replace" to_port="example set input"/>
+      <connect from_op="Discretize" from_port="original" to_port="result 4"/>
+      <connect from_op="Replace" from_port="example set output" to_op="Replace (2)" to_port="example set input"/>
+      <connect from_op="Replace (2)" from_port="example set output" to_op="Aggregate" to_port="example set input"/>
+      <connect from_op="Aggregate" from_port="example set output" to_port="result 2"/>
+      <connect from_op="Aggregate" from_port="original" to_port="result 3"/>
+      <connect from_op="Remove Useless Attributes" from_port="example set output" to_port="result 1"/>
+      <connect from_op="Remove Useless Attributes" from_port="original" to_port="result 5"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+      <portSpacing port="sink_result 5" spacing="0"/>
+      <portSpacing port="sink_result 6" spacing="0"/>
+    </process>
+  </operator>
+</process>

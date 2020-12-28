@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright © 2013 Andrew Chisholm&lt;br&gt;&lt;center&gt;All rights reserved&lt;br&gt;&lt;center&gt;andrew.chisholm@information-gain.com&lt;br&gt;</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="generate_data_user_specification" compatibility="5.3.013" expanded="true" height="60" name="Generate Data by User Specification" width="90" x="112" y="75">
+        <list key="attribute_values">
+          <parameter key="url" value="&quot;http://www.host.com:8080/level1/level2/level3/file.xhtml&quot;"/>
+          <parameter key="sentence" value="&quot;The quick brown fox jumped over the lazy dog&quot;"/>
+          <parameter key="xml" value="&quot;&lt;?xml version=\&quot;1.0\&quot;?&gt; &lt;soap:Envelope xmlns:soap=\&quot;http://schemas.xmlsoap.org/soap/envelope/\&quot;&gt;   &lt;soap:Body&gt;     &lt;ns2:getFolderContentsResponse xmlns:ns2=\&quot;http://service.web.rapidanalytics.de/\&quot;&gt;       &lt;return&gt;         &lt;status&gt;0&lt;/status&gt;         &lt;entries&gt;           &lt;status&gt;0&lt;/status&gt;           &lt;date&gt;1352240369000&lt;/date&gt;           &lt;latestRevision&gt;1&lt;/latestRevision&gt;           &lt;location&gt;/home/rapidanalytics/svm&lt;/location&gt;           &lt;size&gt;15561&lt;/size&gt;           &lt;type&gt;process&lt;/type&gt;           &lt;user&gt;rapidanalytics&lt;/user&gt;         &lt;/entries&gt;         &lt;entries&gt;           &lt;status&gt;0&lt;/status&gt;           &lt;date&gt;1352332393000&lt;/date&gt;           &lt;latestRevision&gt;1&lt;/latestRevision&gt;           &lt;location&gt;/home/rapidanalytics/t1&lt;/location&gt;           &lt;size&gt;1639&lt;/size&gt;           &lt;type&gt;process&lt;/type&gt;           &lt;user&gt;rapidanalytics&lt;/user&gt;         &lt;/entries&gt;         &lt;entries&gt;           &lt;status&gt;0&lt;/status&gt;           &lt;date&gt;1352239836000&lt;/date&gt;           &lt;latestRevision&gt;1&lt;/latestRevision&gt;           &lt;location&gt;/home/rapidanalytics/trainingData&lt;/location&gt;           &lt;size&gt;0&lt;/size&gt;           &lt;type&gt;data&lt;/type&gt;           &lt;user&gt;rapidanalytics&lt;/user&gt;         &lt;/entries&gt;         &lt;location&gt;/home/rapidanalytics&lt;/location&gt;       &lt;/return&gt;     &lt;/ns2:getFolderContentsResponse&gt;   &lt;/soap:Body&gt; &lt;/soap:Envelope&gt; &quot;"/>
+        </list>
+        <list key="set_additional_roles"/>
+      </operator>
+      <operator activated="true" class="text:generate_extract" compatibility="5.3.001" expanded="true" height="60" name="Generate Extract" width="90" x="112" y="165">
+        <parameter key="source_attribute" value="sentence"/>
+        <parameter key="query_type" value="Regular Expression"/>
+        <list key="string_machting_queries"/>
+        <parameter key="attribute_type" value="Nominal"/>
+        <list key="regular_expression_queries">
+          <parameter key="the" value="\bThe\W+((?:\w+\W+){1,6}?)the\b"/>
+        </list>
+        <list key="regular_region_queries"/>
+        <list key="xpath_queries"/>
+        <list key="namespaces"/>
+        <parameter key="ignore_CDATA" value="true"/>
+        <parameter key="assume_html" value="true"/>
+        <list key="index_queries"/>
+      </operator>
+      <operator activated="true" class="text:generate_extract" compatibility="5.3.001" expanded="true" height="60" name="Generate Extract (2)" width="90" x="246" y="75">
+        <parameter key="source_attribute" value="url"/>
+        <parameter key="query_type" value="Regular Expression"/>
+        <list key="string_machting_queries"/>
+        <parameter key="attribute_type" value="Nominal"/>
+        <list key="regular_expression_queries">
+          <parameter key="host" value="http://((?:\w+\.+){1,2}\w+)"/>
+        </list>
+        <list key="regular_region_queries"/>
+        <list key="xpath_queries"/>
+        <list key="namespaces"/>
+        <parameter key="ignore_CDATA" value="true"/>
+        <parameter key="assume_html" value="true"/>
+        <list key="index_queries"/>
+      </operator>
+      <operator activated="true" class="text:generate_extract" compatibility="5.3.001" expanded="true" height="60" name="Generate Extract (3)" width="90" x="246" y="165">
+        <parameter key="source_attribute" value="xml"/>
+        <parameter key="query_type" value="XPath"/>
+        <list key="string_machting_queries"/>
+        <parameter key="attribute_type" value="Nominal"/>
+        <list key="regular_expression_queries"/>
+        <list key="regular_region_queries"/>
+        <list key="xpath_queries">
+          <parameter key="date" value="//soap:Body/ns2:getFolderContentsResponse//location[text()=&quot;/home/rapidanalytics/svm&quot;]/../date/text()"/>
+        </list>
+        <list key="namespaces">
+          <parameter key="ns2" value="http://service.web.rapidanalytics.de/"/>
+          <parameter key="soap" value="http://schemas.xmlsoap.org/soap/envelope/"/>
+        </list>
+        <parameter key="ignore_CDATA" value="true"/>
+        <parameter key="assume_html" value="false"/>
+        <list key="index_queries"/>
+      </operator>
+      <connect from_op="Generate Data by User Specification" from_port="output" to_op="Generate Extract" to_port="Example Set"/>
+      <connect from_op="Generate Extract" from_port="Example Set" to_op="Generate Extract (2)" to_port="Example Set"/>
+      <connect from_op="Generate Extract (2)" from_port="Example Set" to_op="Generate Extract (3)" to_port="Example Set"/>
+      <connect from_op="Generate Extract (3)" from_port="Example Set" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright © 2013 Andrew Chisholm&lt;br&gt;&lt;center&gt;All rights reserved&lt;br&gt;&lt;center&gt;andrew.chisholm@information-gain.com&lt;br&gt;
+&lt;br&gt;
+</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="5.3.013" expanded="true" height="60" name="Retrieve Sonar" width="90" x="45" y="30">
+        <parameter key="repository_entry" value="//Samples/data/Sonar"/>
+      </operator>
+      <operator activated="true" class="optimize_selection_forward" compatibility="5.3.013" expanded="true" height="94" name="Forward Selection" width="90" x="45" y="165">
+        <parameter key="maximal_number_of_attributes" value="60"/>
+        <parameter key="speculative_rounds" value="60"/>
+        <parameter key="stopping_behavior" value="without increase"/>
+        <parameter key="use_relative_increase" value="true"/>
+        <parameter key="alpha" value="0.05"/>
+        <parameter key="parallelize_learning_process" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="x_validation" compatibility="5.1.002" expanded="true" height="112" name="Validation" width="90" x="112" y="30">
+            <parameter key="create_complete_model" value="false"/>
+            <parameter key="average_performances_only" value="true"/>
+            <parameter key="leave_one_out" value="false"/>
+            <parameter key="number_of_validations" value="3"/>
+            <parameter key="sampling_type" value="stratified sampling"/>
+            <parameter key="use_local_random_seed" value="false"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="parallelize_training" value="false"/>
+            <parameter key="parallelize_testing" value="false"/>
+            <process expanded="true">
+              <operator activated="true" class="naive_bayes" compatibility="5.3.013" expanded="true" height="76" name="Naive Bayes" width="90" x="45" y="30">
+                <parameter key="laplace_correction" value="true"/>
+              </operator>
+              <connect from_port="training" to_op="Naive Bayes" to_port="training set"/>
+              <connect from_op="Naive Bayes" from_port="model" to_port="model"/>
+              <portSpacing port="source_training" spacing="0"/>
+              <portSpacing port="sink_model" spacing="0"/>
+              <portSpacing port="sink_through 1" spacing="0"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="apply_model" compatibility="5.3.013" expanded="true" height="76" name="Apply Model" width="90" x="45" y="30">
+                <list key="application_parameters"/>
+                <parameter key="create_view" value="false"/>
+              </operator>
+              <operator activated="true" class="performance" compatibility="5.3.013" expanded="true" height="76" name="Performance" width="90" x="45" y="120">
+                <parameter key="use_example_weights" value="true"/>
+              </operator>
+              <operator activated="true" class="log" compatibility="5.3.013" expanded="true" height="76" name="Log" width="90" x="179" y="30">
+                <list key="log">
+                  <parameter key="numberOfAttributes" value="operator.Forward Selection.value.number of attributes"/>
+                  <parameter key="applyCountPerformance" value="operator.Performance.value.applycount"/>
+                  <parameter key="applyCountValidation" value="operator.Validation.value.applycount"/>
+                  <parameter key="applyCountForwardSelection" value="operator.Forward Selection.value.applycount"/>
+                  <parameter key="innerPerformance" value="operator.Performance.value.performance"/>
+                  <parameter key="validationPerformance" value="operator.Validation.value.performance"/>
+                  <parameter key="featureNames" value="operator.Forward Selection.value.feature_names"/>
+                </list>
+                <parameter key="sorting_type" value="none"/>
+                <parameter key="sorting_k" value="100"/>
+                <parameter key="persistent" value="false"/>
+              </operator>
+              <connect from_port="model" to_op="Apply Model" to_port="model"/>
+              <connect from_port="test set" to_op="Apply Model" to_port="unlabelled data"/>
+              <connect from_op="Apply Model" from_port="labelled data" to_op="Performance" to_port="labelled data"/>
+              <connect from_op="Performance" from_port="performance" to_op="Log" to_port="through 1"/>
+              <connect from_op="Log" from_port="through 1" to_port="averagable 1"/>
+              <portSpacing port="source_model" spacing="0"/>
+              <portSpacing port="source_test set" spacing="0"/>
+              <portSpacing port="source_through 1" spacing="0"/>
+              <portSpacing port="sink_averagable 1" spacing="0"/>
+              <portSpacing port="sink_averagable 2" spacing="0"/>
+            </process>
+          </operator>
+          <connect from_port="example set" to_op="Validation" to_port="training"/>
+          <connect from_op="Validation" from_port="averagable 1" to_port="performance"/>
+          <portSpacing port="source_example set" spacing="0"/>
+          <portSpacing port="sink_performance" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="5.3.013" expanded="true" height="94" name="Log to Data" width="90" x="179" y="30"/>
+      <operator activated="true" class="guess_types" compatibility="5.3.013" expanded="true" height="76" name="Guess Types" width="90" x="179" y="165">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="decimal_point_character" value="."/>
+      </operator>
+      <connect from_op="Retrieve Sonar" from_port="output" to_op="Forward Selection" to_port="example set"/>
+      <connect from_op="Forward Selection" from_port="example set" to_op="Log to Data" to_port="through 1"/>
+      <connect from_op="Log to Data" from_port="exampleSet" to_op="Guess Types" to_port="example set input"/>
+      <connect from_op="Log to Data" from_port="through 1" to_port="result 2"/>
+      <connect from_op="Guess Types" from_port="example set output" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>

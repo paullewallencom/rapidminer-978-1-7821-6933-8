@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright � 2013 Andrew Chisholm&lt;br&gt;&lt;center&gt;All rights reserved&lt;br&gt;&lt;center&gt;andrew.chisholm@information-gain.com&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+This process reads and writes to a folder at the following location
+&lt;br&gt;
+C:\exploringDataWithRapidMiner
+&lt;br&gt;
+Change this for your own needs as required
+</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="5.3.013" expanded="true" height="60" name="Read CSV" width="90" x="45" y="30">
+        <parameter key="csv_file" value="C:\exploringDataWithRapidMiner\DataToVisualize.csv"/>
+        <parameter key="column_separators" value=";"/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="false"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="date_format" value="EEE MMM dd HH:mm:ss zzz yyyy"/>
+        <parameter key="first_row_as_names" value="false"/>
+        <list key="annotations">
+          <parameter key="0" value="Name"/>
+        </list>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United Kingdom)"/>
+        <parameter key="encoding" value="windows-1252"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="date.true.date_time.attribute"/>
+          <parameter key="1" value="id.true.integer.attribute"/>
+          <parameter key="2" value="att16.true.polynominal.attribute"/>
+          <parameter key="3" value="att1.true.real.attribute"/>
+          <parameter key="4" value="att2.true.real.attribute"/>
+          <parameter key="5" value="att3.true.real.attribute"/>
+          <parameter key="6" value="att4.true.real.attribute"/>
+          <parameter key="7" value="att5.true.real.attribute"/>
+          <parameter key="8" value="att6.true.real.attribute"/>
+          <parameter key="9" value="att7.true.real.attribute"/>
+          <parameter key="10" value="att8.true.real.attribute"/>
+          <parameter key="11" value="att9.true.real.attribute"/>
+          <parameter key="12" value="att10.true.real.attribute"/>
+          <parameter key="13" value="att11.true.real.attribute"/>
+          <parameter key="14" value="att12.true.real.attribute"/>
+          <parameter key="15" value="att13.true.real.attribute"/>
+          <parameter key="16" value="att14.true.real.attribute"/>
+          <parameter key="17" value="att15.true.real.attribute"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="true"/>
+        <parameter key="datamanagement" value="double_array"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="5.3.013" expanded="true" height="76" name="Set Role (2)" width="90" x="179" y="30">
+        <parameter key="attribute_name" value="att16"/>
+        <parameter key="target_role" value="label"/>
+        <list key="set_additional_roles">
+          <parameter key="id" value="id"/>
+          <parameter key="date" value="dae"/>
+        </list>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="5.3.013" expanded="true" height="112" name="Multiply" width="90" x="313" y="30"/>
+      <operator activated="true" class="data_to_similarity_data" compatibility="5.3.013" expanded="true" height="60" name="Data to Similarity Data" width="90" x="514" y="210">
+        <parameter key="measure_types" value="MixedMeasures"/>
+        <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+        <parameter key="nominal_measure" value="NominalDistance"/>
+        <parameter key="numerical_measure" value="EuclideanDistance"/>
+        <parameter key="divergence" value="GeneralizedIDivergence"/>
+        <parameter key="kernel_type" value="radial"/>
+        <parameter key="kernel_gamma" value="1.0"/>
+        <parameter key="kernel_sigma1" value="1.0"/>
+        <parameter key="kernel_sigma2" value="0.0"/>
+        <parameter key="kernel_sigma3" value="2.0"/>
+        <parameter key="kernel_degree" value="3.0"/>
+        <parameter key="kernel_shift" value="1.0"/>
+        <parameter key="kernel_a" value="1.0"/>
+        <parameter key="kernel_b" value="0.0"/>
+      </operator>
+      <operator activated="true" class="cross_distances" compatibility="5.3.013" expanded="true" height="94" name="Cross Distances" width="90" x="514" y="30">
+        <parameter key="measure_types" value="MixedMeasures"/>
+        <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+        <parameter key="nominal_measure" value="NominalDistance"/>
+        <parameter key="numerical_measure" value="EuclideanDistance"/>
+        <parameter key="divergence" value="GeneralizedIDivergence"/>
+        <parameter key="kernel_type" value="radial"/>
+        <parameter key="kernel_gamma" value="1.0"/>
+        <parameter key="kernel_sigma1" value="1.0"/>
+        <parameter key="kernel_sigma2" value="0.0"/>
+        <parameter key="kernel_sigma3" value="2.0"/>
+        <parameter key="kernel_degree" value="3.0"/>
+        <parameter key="kernel_shift" value="1.0"/>
+        <parameter key="kernel_a" value="1.0"/>
+        <parameter key="kernel_b" value="0.0"/>
+        <parameter key="only_top_k" value="true"/>
+        <parameter key="k" value="10"/>
+        <parameter key="search_for" value="nearest"/>
+        <parameter key="compute_similarities" value="false"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role (2)" to_port="example set input"/>
+      <connect from_op="Set Role (2)" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Cross Distances" to_port="request set"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Cross Distances" to_port="reference set"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Data to Similarity Data" to_port="example set"/>
+      <connect from_op="Data to Similarity Data" from_port="similarity example set" to_port="result 2"/>
+      <connect from_op="Cross Distances" from_port="result set" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>

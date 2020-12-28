@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros>
+      <macro>
+        <key>M1</key>
+        <value>M1Value</value>
+      </macro>
+    </macros>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright © 2013 Andrew Chisholm&lt;br&gt;&lt;center&gt;All rights reserved&lt;br&gt;&lt;center&gt;andrew.chisholm@information-gain.com&lt;br&gt;
+</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="execute_script" compatibility="5.3.013" expanded="true" height="76" name="Execute Script" width="90" x="112" y="75">
+        <parameter key="script" value="import com.rapidminer.tools.Ontology;&#10;String[] strings= new String[2];&#10;for (String macroName : operator.getProcess().macroHandler.getDefinedMacroNames()) {&#10;&#9;String macroValue = operator.getProcess().macroHandler.getMacro(macroName);&#10;&#9;strings[0] = macroName;&#10;&#9;strings[1] = macroValue;&#10;&#9;operator.logNote (&quot;Macro name | value:  &quot; + macroName + &quot; | &quot; + macroValue);&#10;}&#10;return;&#10;&#10;"/>
+        <parameter key="standard_imports" value="true"/>
+      </operator>
+      <connect from_op="Execute Script" from_port="output 1" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>

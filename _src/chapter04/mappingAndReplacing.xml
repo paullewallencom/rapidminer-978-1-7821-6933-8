@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.014">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.014" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright © 2013 Andrew Chisholm&lt;br&gt;&lt;center&gt;All rights reserved&lt;br&gt;&lt;center&gt;andrew.chisholm@information-gain.com&lt;br&gt;</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="generate_data_user_specification" compatibility="5.3.014" expanded="true" height="60" name="Generate Data by User Specification" width="90" x="112" y="75">
+        <list key="attribute_values">
+          <parameter key="nominal" value="&quot;color&quot;"/>
+        </list>
+        <list key="set_additional_roles"/>
+      </operator>
+      <operator activated="true" class="map" compatibility="5.3.014" expanded="true" height="76" name="Map" width="90" x="313" y="75">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <list key="value_mappings">
+          <parameter key="color" value="colour"/>
+        </list>
+        <parameter key="replace_what" value="color"/>
+        <parameter key="replace_by" value="colour"/>
+        <parameter key="consider_regular_expressions" value="false"/>
+        <parameter key="add_default_mapping" value="false"/>
+      </operator>
+      <operator activated="true" class="generate_data_user_specification" compatibility="5.3.014" expanded="true" height="60" name="Generate Data by User Specification (2)" width="90" x="112" y="210">
+        <list key="attribute_values">
+          <parameter key="nominal" value="&quot;the color green&quot;"/>
+        </list>
+        <list key="set_additional_roles"/>
+      </operator>
+      <operator activated="true" class="replace" compatibility="5.3.014" expanded="true" height="76" name="Replace" width="90" x="313" y="210">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="nominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="replace_what" value="(.*)color(.*)"/>
+        <parameter key="replace_by" value="$1colour$2"/>
+      </operator>
+      <operator activated="true" class="generate_data_user_specification" compatibility="5.3.014" expanded="true" height="60" name="Generate Data by User Specification (3)" width="90" x="112" y="345">
+        <list key="attribute_values">
+          <parameter key="nominal" value="&quot;the color green is one of the colors of the rainbow&quot;"/>
+        </list>
+        <list key="set_additional_roles"/>
+      </operator>
+      <operator activated="true" class="generate_data_user_specification" compatibility="5.3.014" expanded="true" height="60" name="Generate Data by User Specification (4)" width="90" x="112" y="435">
+        <list key="attribute_values">
+          <parameter key="nominal" value="&quot;is black a color?&quot;"/>
+        </list>
+        <list key="set_additional_roles"/>
+      </operator>
+      <operator activated="true" class="append" compatibility="5.3.014" expanded="true" height="94" name="Append" width="90" x="313" y="345">
+        <parameter key="datamanagement" value="double_array"/>
+        <parameter key="merge_type" value="all"/>
+      </operator>
+      <operator activated="true" class="generate_data_user_specification" compatibility="5.3.014" expanded="true" height="60" name="Generate Data by User Specification (5)" width="90" x="112" y="570">
+        <list key="attribute_values">
+          <parameter key="from" value="&quot;color&quot;"/>
+          <parameter key="to" value="&quot;colour&quot;"/>
+        </list>
+        <list key="set_additional_roles"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="5.3.014" expanded="true" height="94" name="Multiply" width="90" x="313" y="570"/>
+      <operator activated="true" class="replace_dictionary" compatibility="5.3.014" expanded="true" height="94" name="Replace (Dictionary)" width="90" x="447" y="345">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="create_view" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="from_attribute" value="from"/>
+        <parameter key="to_attribute" value="to"/>
+        <parameter key="use_regular_expressions" value="false"/>
+        <parameter key="convert_to_lowercase" value="false"/>
+        <parameter key="first_match_only" value="false"/>
+      </operator>
+      <connect from_op="Generate Data by User Specification" from_port="output" to_op="Map" to_port="example set input"/>
+      <connect from_op="Map" from_port="example set output" to_port="result 1"/>
+      <connect from_op="Generate Data by User Specification (2)" from_port="output" to_op="Replace" to_port="example set input"/>
+      <connect from_op="Replace" from_port="example set output" to_port="result 2"/>
+      <connect from_op="Generate Data by User Specification (3)" from_port="output" to_op="Append" to_port="example set 1"/>
+      <connect from_op="Generate Data by User Specification (4)" from_port="output" to_op="Append" to_port="example set 2"/>
+      <connect from_op="Append" from_port="merged set" to_op="Replace (Dictionary)" to_port="example set input"/>
+      <connect from_op="Generate Data by User Specification (5)" from_port="output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Replace (Dictionary)" to_port="dictionary"/>
+      <connect from_op="Multiply" from_port="output 2" to_port="result 5"/>
+      <connect from_op="Replace (Dictionary)" from_port="example set output" to_port="result 3"/>
+      <connect from_op="Replace (Dictionary)" from_port="original" to_port="result 4"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+      <portSpacing port="sink_result 5" spacing="0"/>
+      <portSpacing port="sink_result 6" spacing="0"/>
+    </process>
+  </operator>
+</process>

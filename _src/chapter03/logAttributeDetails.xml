@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright © 2013 Andrew Chisholm&lt;br&gt;
+&lt;center&gt;All rights reserved&lt;br&gt;
+&lt;center&gt;andrew.chisholm@information-gain.com&lt;br&gt;
+</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="5.3.013" expanded="true" height="60" name="Retrieve Labor-Negotiations" width="90" x="45" y="30">
+        <parameter key="repository_entry" value="//Samples/data/Labor-Negotiations"/>
+      </operator>
+      <operator activated="true" class="loop_attributes" compatibility="5.3.013" expanded="true" height="76" name="Loop Attributes" width="90" x="45" y="165">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="true"/>
+        <parameter key="iteration_macro" value="loop_attribute"/>
+        <parameter key="parallelize_subprocess" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="extract_macro" compatibility="5.3.013" expanded="true" height="60" name="average" width="90" x="179" y="30">
+            <parameter key="macro" value="%{loop_attribute}_average"/>
+            <parameter key="macro_type" value="statistics"/>
+            <parameter key="statistics" value="average"/>
+            <parameter key="attribute_name" value="%{loop_attribute}"/>
+            <list key="additional_macros"/>
+          </operator>
+          <operator activated="true" class="provide_macro_as_log_value" compatibility="5.3.013" expanded="true" height="76" name="log average" width="90" x="179" y="120">
+            <parameter key="macro_name" value="%{loop_attribute}_average"/>
+          </operator>
+          <operator activated="true" class="extract_macro" compatibility="5.3.013" expanded="true" height="60" name="unknown" width="90" x="313" y="30">
+            <parameter key="macro" value="%{loop_attribute}_unknown"/>
+            <parameter key="macro_type" value="statistics"/>
+            <parameter key="statistics" value="unknown"/>
+            <parameter key="attribute_name" value="%{loop_attribute}"/>
+            <list key="additional_macros"/>
+          </operator>
+          <operator activated="true" class="provide_macro_as_log_value" compatibility="5.3.013" expanded="true" height="76" name="log unknown" width="90" x="313" y="120">
+            <parameter key="macro_name" value="%{loop_attribute}_unknown"/>
+          </operator>
+          <operator activated="true" class="extract_macro" compatibility="5.3.013" expanded="true" height="60" name="count" width="90" x="447" y="30">
+            <parameter key="macro" value="%{loop_attribute}_count"/>
+            <parameter key="macro_type" value="number_of_examples"/>
+            <parameter key="statistics" value="count"/>
+            <parameter key="attribute_name" value="%{loop_attribute}"/>
+            <parameter key="attribute_value" value="0"/>
+            <list key="additional_macros"/>
+          </operator>
+          <operator activated="true" class="provide_macro_as_log_value" compatibility="5.3.013" expanded="true" height="76" name="log count" width="90" x="447" y="120">
+            <parameter key="macro_name" value="%{loop_attribute}_count"/>
+          </operator>
+          <operator activated="true" class="log" compatibility="5.3.013" expanded="true" height="76" name="Log" width="90" x="648" y="30">
+            <list key="log">
+              <parameter key="attributeName" value="operator.log average.parameter.macro_name"/>
+              <parameter key="average" value="operator.log average.value.macro_value"/>
+              <parameter key="unknown" value="operator.log unknown.value.macro_value"/>
+              <parameter key="count" value="operator.log count.value.macro_value"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="sorting_k" value="100"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="example set" to_op="average" to_port="example set"/>
+          <connect from_op="average" from_port="example set" to_op="log average" to_port="through 1"/>
+          <connect from_op="log average" from_port="through 1" to_op="unknown" to_port="example set"/>
+          <connect from_op="unknown" from_port="example set" to_op="log unknown" to_port="through 1"/>
+          <connect from_op="log unknown" from_port="through 1" to_op="count" to_port="example set"/>
+          <connect from_op="count" from_port="example set" to_op="log count" to_port="through 1"/>
+          <connect from_op="log count" from_port="through 1" to_op="Log" to_port="through 1"/>
+          <connect from_op="Log" from_port="through 1" to_port="example set"/>
+          <portSpacing port="source_example set" spacing="0"/>
+          <portSpacing port="sink_example set" spacing="0"/>
+          <portSpacing port="sink_result 1" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="5.3.013" expanded="true" height="94" name="Log to Data" width="90" x="246" y="30"/>
+      <operator activated="true" class="filter_examples" compatibility="5.3.013" expanded="true" height="76" name="Filter Examples" width="90" x="380" y="165">
+        <parameter key="condition_class" value="missing_attributes"/>
+        <parameter key="invert_filter" value="false"/>
+      </operator>
+      <operator activated="true" class="guess_types" compatibility="5.3.013" expanded="true" height="76" name="Guess Types" width="90" x="380" y="30">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="decimal_point_character" value="."/>
+      </operator>
+      <connect from_op="Retrieve Labor-Negotiations" from_port="output" to_op="Loop Attributes" to_port="example set"/>
+      <connect from_op="Loop Attributes" from_port="example set" to_op="Log to Data" to_port="through 1"/>
+      <connect from_op="Log to Data" from_port="exampleSet" to_op="Guess Types" to_port="example set input"/>
+      <connect from_op="Log to Data" from_port="through 1" to_op="Filter Examples" to_port="example set input"/>
+      <connect from_op="Filter Examples" from_port="example set output" to_port="result 2"/>
+      <connect from_op="Filter Examples" from_port="original" to_port="result 3"/>
+      <connect from_op="Guess Types" from_port="example set output" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>

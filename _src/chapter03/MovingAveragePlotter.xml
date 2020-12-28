@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright © 2013 Andrew Chisholm&lt;br&gt;&lt;center&gt;All rights reserved&lt;br&gt;&lt;center&gt;andrew.chisholm@information-gain.com&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+This process reads and writes to a folder at the following location
+&lt;br&gt;
+C:\exploringDataWithRapidMiner
+&lt;br&gt;
+Change this for your own needs as required
+</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="5.3.013" expanded="true" height="60" name="Read CSV" width="90" x="45" y="30">
+        <parameter key="csv_file" value="C:\exploringDataWithRapidMiner\DataToVisualize.csv"/>
+        <parameter key="column_separators" value=";"/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="false"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="date_format" value="EEE MMM dd HH:mm:ss zzz yyyy"/>
+        <parameter key="first_row_as_names" value="false"/>
+        <list key="annotations">
+          <parameter key="0" value="Name"/>
+        </list>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United Kingdom)"/>
+        <parameter key="encoding" value="windows-1252"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="date.true.date_time.attribute"/>
+          <parameter key="1" value="id.true.integer.attribute"/>
+          <parameter key="2" value="att16.true.polynominal.attribute"/>
+          <parameter key="3" value="att1.true.real.attribute"/>
+          <parameter key="4" value="att2.true.real.attribute"/>
+          <parameter key="5" value="att3.true.real.attribute"/>
+          <parameter key="6" value="att4.true.real.attribute"/>
+          <parameter key="7" value="att5.true.real.attribute"/>
+          <parameter key="8" value="att6.true.real.attribute"/>
+          <parameter key="9" value="att7.true.real.attribute"/>
+          <parameter key="10" value="att8.true.real.attribute"/>
+          <parameter key="11" value="att9.true.real.attribute"/>
+          <parameter key="12" value="att10.true.real.attribute"/>
+          <parameter key="13" value="att11.true.real.attribute"/>
+          <parameter key="14" value="att12.true.real.attribute"/>
+          <parameter key="15" value="att13.true.real.attribute"/>
+          <parameter key="16" value="att14.true.real.attribute"/>
+          <parameter key="17" value="att15.true.real.attribute"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="true"/>
+        <parameter key="datamanagement" value="double_array"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="5.3.013" expanded="true" height="76" name="Set Role (2)" width="90" x="179" y="30">
+        <parameter key="attribute_name" value="att16"/>
+        <parameter key="target_role" value="label"/>
+        <list key="set_additional_roles">
+          <parameter key="id" value="id"/>
+          <parameter key="date" value="dae"/>
+        </list>
+      </operator>
+      <operator activated="true" class="order_attributes" compatibility="5.3.013" expanded="true" height="76" name="Reorder Attributes (2)" width="90" x="179" y="120">
+        <parameter key="sort_mode" value="user specified"/>
+        <parameter key="sort_direction" value="ascending"/>
+        <parameter key="attribute_ordering" value="att1|att2|att3|att4|att6|att11|att12|att8|att5|att7|att15|att9|att10|att13|att14|att16"/>
+        <parameter key="handle_unmatched" value="append"/>
+        <parameter key="use_regular_expressions" value="false"/>
+      </operator>
+      <operator activated="true" class="loop_attributes" compatibility="5.3.013" expanded="true" height="76" name="Loop Attributes" width="90" x="313" y="30">
+        <parameter key="attribute_filter_type" value="regular_expression"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="regular_expression" value="att.*"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="iteration_macro" value="loop_attribute"/>
+        <parameter key="parallelize_subprocess" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="series:moving_average" compatibility="5.2.000" expanded="true" height="76" name="Moving Average" width="90" x="179" y="120">
+            <parameter key="attribute_name" value="%{loop_attribute}"/>
+            <parameter key="window_width" value="12"/>
+            <parameter key="aggregation_function" value="average"/>
+            <parameter key="ignore_missings" value="false"/>
+            <parameter key="result_position" value="center"/>
+            <parameter key="window_weighting" value="Rectangular"/>
+            <parameter key="keep_original_attribute" value="true"/>
+          </operator>
+          <connect from_port="example set" to_op="Moving Average" to_port="example set input"/>
+          <connect from_op="Moving Average" from_port="example set output" to_port="example set"/>
+          <portSpacing port="source_example set" spacing="0"/>
+          <portSpacing port="sink_example set" spacing="0"/>
+          <portSpacing port="sink_result 1" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="rename_by_replacing" compatibility="5.3.013" expanded="true" height="76" name="Rename by Replacing" width="90" x="313" y="120">
+        <parameter key="attribute_filter_type" value="regular_expression"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="regular_expression" value="moving.*"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="replace_what" value=".*moving_average\((.*)\)"/>
+        <parameter key="replace_by" value="movingAverageWindow12_$1"/>
+      </operator>
+      <operator activated="true" class="loop_attributes" compatibility="5.3.013" expanded="true" height="76" name="Loop Attributes (2)" width="90" x="447" y="30">
+        <parameter key="attribute_filter_type" value="regular_expression"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="regular_expression" value="^att.*"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="iteration_macro" value="loop_attribute"/>
+        <parameter key="parallelize_subprocess" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="series:moving_average" compatibility="5.2.000" expanded="true" height="76" name="Moving Average (2)" width="90" x="450" y="30">
+            <parameter key="attribute_name" value="%{loop_attribute}"/>
+            <parameter key="window_width" value="200"/>
+            <parameter key="aggregation_function" value="average"/>
+            <parameter key="ignore_missings" value="false"/>
+            <parameter key="result_position" value="center"/>
+            <parameter key="window_weighting" value="Rectangular"/>
+            <parameter key="keep_original_attribute" value="true"/>
+          </operator>
+          <connect from_port="example set" to_op="Moving Average (2)" to_port="example set input"/>
+          <connect from_op="Moving Average (2)" from_port="example set output" to_port="example set"/>
+          <portSpacing port="source_example set" spacing="0"/>
+          <portSpacing port="sink_example set" spacing="0"/>
+          <portSpacing port="sink_result 1" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="rename_by_replacing" compatibility="5.3.013" expanded="true" height="76" name="Rename by Replacing (2)" width="90" x="447" y="120">
+        <parameter key="attribute_filter_type" value="regular_expression"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="regular_expression" value="moving.*"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="replace_what" value=".*moving_average\((.*)\)"/>
+        <parameter key="replace_by" value="movingAverageWindow200_$1"/>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="5.3.013" expanded="true" height="76" name="Generate Attributes" width="90" x="581" y="30">
+        <list key="function_descriptions">
+          <parameter key="random" value="rand()"/>
+          <parameter key="color" value="0"/>
+        </list>
+        <parameter key="use_standard_constants" value="true"/>
+        <parameter key="keep_all" value="true"/>
+      </operator>
+      <operator activated="true" class="set_data" compatibility="5.3.013" expanded="true" height="76" name="Set Data" width="90" x="581" y="120">
+        <parameter key="example_index" value="1"/>
+        <parameter key="count_backwards" value="false"/>
+        <parameter key="attribute_name" value="color"/>
+        <parameter key="value" value="1"/>
+        <list key="additional_values"/>
+      </operator>
+      <operator activated="true" class="order_attributes" compatibility="5.3.013" expanded="true" height="76" name="Reorder Attributes (3)" width="90" x="715" y="30">
+        <parameter key="sort_mode" value="user specified"/>
+        <parameter key="sort_direction" value="ascending"/>
+        <parameter key="attribute_ordering" value="att1|att2|att3|att4|att5|att6|att7|att8|att9|att10|att11|att12|att13|att14|att15|att16"/>
+        <parameter key="handle_unmatched" value="append"/>
+        <parameter key="use_regular_expressions" value="false"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role (2)" to_port="example set input"/>
+      <connect from_op="Set Role (2)" from_port="example set output" to_op="Reorder Attributes (2)" to_port="example set input"/>
+      <connect from_op="Reorder Attributes (2)" from_port="example set output" to_op="Loop Attributes" to_port="example set"/>
+      <connect from_op="Loop Attributes" from_port="example set" to_op="Rename by Replacing" to_port="example set input"/>
+      <connect from_op="Rename by Replacing" from_port="example set output" to_op="Loop Attributes (2)" to_port="example set"/>
+      <connect from_op="Loop Attributes (2)" from_port="example set" to_op="Rename by Replacing (2)" to_port="example set input"/>
+      <connect from_op="Rename by Replacing (2)" from_port="example set output" to_op="Generate Attributes" to_port="example set input"/>
+      <connect from_op="Generate Attributes" from_port="example set output" to_op="Set Data" to_port="example set input"/>
+      <connect from_op="Set Data" from_port="example set output" to_op="Reorder Attributes (3)" to_port="example set input"/>
+      <connect from_op="Reorder Attributes (3)" from_port="example set output" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>

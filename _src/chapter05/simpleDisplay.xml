@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <description>&lt;center&gt;Copyright © 2013 Andrew Chisholm&lt;br&gt;All rights reserved&lt;br&gt;andrew.chisholm@information-gain.com
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+This process reads and writes to a folder at the following location
+&lt;br&gt;
+C:\exploringDataWithRapidMiner
+&lt;br&gt;
+Change this for your own needs as required</description>
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="5.3.013" expanded="true" height="60" name="Read CSV" width="90" x="112" y="75">
+        <parameter key="csv_file" value="C:\exploringDataWithRapidMiner\simpleData.csv"/>
+        <parameter key="column_separators" value=";"/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="false"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="date_format" value=""/>
+        <parameter key="first_row_as_names" value="false"/>
+        <list key="annotations">
+          <parameter key="0" value="Name"/>
+        </list>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="encoding" value="windows-1252"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="dateplustime.true.real.attribute"/>
+          <parameter key="1" value="realvalue.true.real.attribute"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="true"/>
+        <parameter key="datamanagement" value="double_array"/>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="5.3.013" expanded="true" height="76" name="Generate Attributes" width="90" x="112" y="165">
+        <list key="function_descriptions">
+          <parameter key="time" value="dateplustime"/>
+          <parameter key="value" value="realvalue"/>
+          <parameter key="dateTime" value="date_parse(dateplustime*1000)"/>
+          <parameter key="correctValue1" value="if(value&lt;10, value*1000,value)"/>
+          <parameter key="correctValue2" value="if(correctValue1&gt;200000000,value/20000000,correctValue1)"/>
+          <parameter key="correctValue3" value="if(correctValue2&gt;1000000,value/100000,correctValue2)"/>
+        </list>
+        <parameter key="use_standard_constants" value="true"/>
+        <parameter key="keep_all" value="true"/>
+      </operator>
+      <operator activated="true" class="detect_outlier_distances" compatibility="5.3.013" expanded="true" height="76" name="Detect Outlier (Distances)" width="90" x="112" y="255">
+        <parameter key="number_of_neighbors" value="10"/>
+        <parameter key="number_of_outliers" value="10"/>
+        <parameter key="distance_function" value="euclidian distance"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Generate Attributes" to_port="example set input"/>
+      <connect from_op="Generate Attributes" from_port="example set output" to_op="Detect Outlier (Distances)" to_port="example set input"/>
+      <connect from_op="Detect Outlier (Distances)" from_port="example set output" to_port="result 1"/>
+      <connect from_op="Detect Outlier (Distances)" from_port="original" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>
